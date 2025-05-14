@@ -1,0 +1,65 @@
+class Product:
+    def __init__(self, product_id, name, stock, reorder_level):
+        self.product_id = product_id
+        self.name = name
+        self.stock = stock
+        self.reorder_level = reorder_level
+
+    def reduce_stock(self, quantity):
+        if self.stock >= quantity:
+            self.stock -= quantity
+            print(f"{quantity} units of '{self.name}' shipped. Stock left: {self.stock}")
+            if self.stock < self.reorder_level:
+                print(f"⚠️ Reorder alert for '{self.name}' (Stock = {self.stock})")
+        else:
+            print(f"✘ Not enough stock for '{self.name}'")
+
+    def restock(self, quantity):
+        self.stock += quantity
+        print(f"'{self.name}' restocked. New stock: {self.stock}")
+
+class SupplyChainManager:
+    def __init__(self):
+        self.products = {}
+
+    def add_product(self, product):
+        self.products[product.product_id] = product
+
+    def process_order(self, product_id, quantity):
+        if product_id in self.products:
+            product = self.products[product_id]
+            product.reduce_stock(quantity)
+        else:
+            print("✘ Product not found")
+
+    def restock_product(self, product_id, quantity):
+        if product_id in self.products:
+            self.products[product_id].restock(quantity)
+        else:
+            print("✘ Product not found")
+
+    def show_inventory(self):
+        print("\n📦 Current Inventory:")
+        for product in self.products.values():
+            print(f"- {product.name}: {product.stock} units")
+
+# ---- Sample Usage ----
+scm = SupplyChainManager()
+
+# Add some products
+scm.add_product(Product("P001", "Laptop", stock=50, reorder_level=40))
+scm.add_product(Product("P002", "Mouse", stock=200, reorder_level=50))
+scm.add_product(Product("P003", "Keyboard", stock=80, reorder_level=20))
+
+# Show inventory
+scm.show_inventory()
+
+# Process some orders
+scm.process_order("P001", 45)
+scm.process_order("P002", 160)
+
+# Restock a product
+scm.restock_product("P001", 30)
+
+# Final inventory
+scm.show_inventory()
