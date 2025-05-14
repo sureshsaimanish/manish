@@ -1,0 +1,47 @@
+class Product:
+    def __init__(self, product_id, name, quantity):
+        self.product_id = product_id
+        self.name = name
+        self.quantity = quantity
+
+    def restock(self, amount):
+        self.quantity += amount
+        print(f"Restocked {self.name}. New quantity: {self.quantity}")
+
+    def ship(self, amount):
+        if amount > self.quantity:
+            print(f"Not enough stock to ship {amount} units of {self.name}")
+        else:
+            self.quantity -= amount
+            print(f"Shipped {amount} units of {self.name}. Remaining: {self.quantity}")
+
+class Inventory:
+    def __init__(self):
+        self.products = {}
+
+    def add_product(self, product):
+        self.products[product.product_id] = product
+
+    def get_product(self, product_id):
+        return self.products.get(product_id)
+
+    def display_inventory(self):
+        print("Current Inventory:")
+        for p in self.products.values():
+            print(f"{p.name} (ID: {p.product_id}) - Quantity: {p.quantity}")
+
+# Example usage
+if __name__ == "__main__":
+    inv = Inventory()
+    prod1 = Product("P001", "Laptop", 50)
+    prod2 = Product("P002", "Monitor", 30)
+
+    inv.add_product(prod1)
+    inv.add_product(prod2)
+
+    inv.display_inventory()
+
+    prod1.ship(5)
+    prod2.restock(10)
+
+    inv.display_inventory()
