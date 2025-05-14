@@ -1,0 +1,39 @@
+class Entity:
+    def __init__(self, name, inventory=0):
+        self.name = name
+        self.inventory = inventory
+
+    def receive(self, quantity):
+        self.inventory += quantity
+        print(f"{self.name} received {quantity} units. Inventory: {self.inventory}")
+
+    def send(self, quantity, receiver):
+        if self.inventory >= quantity:
+            self.inventory -= quantity
+            receiver.receive(quantity)
+            print(f"{self.name} sent {quantity} units to {receiver.name}. Inventory: {self.inventory}")
+        else:
+            print(f"{self.name} cannot send {quantity} units. Not enough inventory.")
+
+# Create entities
+supplier = Entity("Supplier", inventory=1000)
+manufacturer = Entity("Manufacturer", inventory=100)
+distributor = Entity("Distributor", inventory=50)
+retailer = Entity("Retailer", inventory=20)
+
+# Simulate supply chain
+def simulate_supply_chain():
+    print("\n--- Supply Chain Simulation Start ---\n")
+
+    # Supplier sends to Manufacturer
+    supplier.send(200, manufacturer)
+
+    # Manufacturer sends to Distributor
+    manufacturer.send(100, distributor)
+
+    # Distributor sends to Retailer
+    distributor.send(30, retailer)
+
+    print("\n--- Supply Chain Simulation End ---\n")
+
+simulate_supply_chain()
